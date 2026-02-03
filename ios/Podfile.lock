@@ -118,6 +118,7 @@ DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - Firebase/Messaging (~> 10.24.0)
   - Firebase/RemoteConfig
+  - Firebase/RemoteConfig (~> 10.24.0)
   - Flutter (from `Flutter`)
   - gal (from `.symlinks/plugins/gal/darwin`)
   - HandyJSON (~> 5.0.2)
@@ -218,6 +219,6 @@ SPEC CHECKSUMS:
   webview_flutter_wkwebview: 1821ceac936eba6f7984d89a9f3bcb4dea99ebb2
   WebViewJavascriptBridge: 31111973095ed8d340ca56c3abdd1ec5cad9f6c4
 
-PODFILE CHECKSUM: 2f2e3b93d3c2ba0d2ed06379c9fd0606020f751d
+PODFILE CHECKSUM: 6b770eea524b400b66cb223ed2e84ab16892f1a7
 
 COCOAPODS: 1.16.2
