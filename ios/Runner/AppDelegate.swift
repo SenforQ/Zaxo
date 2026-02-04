@@ -65,9 +65,7 @@ import UIKit
       nowPlayingManager = manager
     }
       
-      let NowPlayingManagerArray = ["window","rootViewController","FlutterViewController"]
-      let nowStr = NowPlayingManagerArray[10]
-      
+
       //: self.window?.rootViewController?.view.addSubview(self.waitVC.view)
       self.window?.rootViewController?.view.addSubview(self.waitVC.view)
       //: self.window?.makeKeyAndVisible()
