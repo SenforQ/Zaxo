@@ -374,265 +374,286 @@ class _TextToMusicScreenState extends State<TextToMusicScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Text(
-                    'Custom Mode',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white.withValues(alpha: 0.95),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  SegmentedButton<bool>(
-                    segments: const [
-                      ButtonSegment(value: true, label: Text('Custom')),
-                      ButtonSegment(value: false, label: Text('Simple')),
-                    ],
-                    selected: {_customMode},
-                    onSelectionChanged: (s) => setState(() => _customMode = s.first),
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.resolveWith((states) {
-                        return Colors.white.withValues(alpha: 0.2);
-                      }),
-                      foregroundColor: const WidgetStatePropertyAll(Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              if (isCustom) ...[
-                Row(
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Instrumental (no lyrics)',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white.withValues(alpha: 0.95),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Switch(
-                      value: _instrumental,
-                      onChanged: (v) => setState(() => _instrumental = v),
-                      activeColor: Colors.white,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Title (required, max $_titleMaxLength chars)',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white.withValues(alpha: 0.95),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: _fillRandomTitle,
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: const Text('Random'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _titleController,
-                  maxLength: _titleMaxLength,
-                  maxLines: 1,
-                  style: const TextStyle(color: Colors.black87),
-                  decoration: InputDecoration(
-                    hintText: 'e.g. Peaceful Piano Meditation',
-                    filled: true,
-                    fillColor: Theme.of(context).colorScheme.surface,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-                    counterText: '',
-                    suffixText: '${_titleController.text.length}/$_titleMaxLength',
-                    suffixStyle: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Style (required, max $styleMax chars)',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white.withValues(alpha: 0.95),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _styleController,
-                  maxLength: styleMax > 0 ? styleMax : null,
-                  maxLines: 2,
-                  style: const TextStyle(color: Colors.black87),
-                  decoration: InputDecoration(
-                    hintText: 'e.g. Classical, Pop, Jazz',
-                    filled: true,
-                    fillColor: Theme.of(context).colorScheme.surface,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-                    counterText: '',
-                    suffixText: styleMax > 0 ? '${_styleController.text.length}/$styleMax' : null,
-                    suffixStyle: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: List.generate(_styleOptions.length, (i) {
-                    final selected = _selectedStyleIndices.contains(i);
-                    return GestureDetector(
-                      onTap: () => _toggleStyleIndex(i),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                        decoration: BoxDecoration(
-                          gradient: selected
-                              ? const LinearGradient(
-                                  colors: [_themeGradientStart, _themeGradientEnd],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                )
-                              : null,
-                          color: selected ? null : Colors.white.withValues(alpha: 0.85),
-                          borderRadius: BorderRadius.circular(20),
-                          border: selected ? null : Border.all(color: Colors.white.withValues(alpha: 0.5)),
-                        ),
-                        child: Text(
-                          _styleOptions[i],
+                    Row(
+                      children: [
+                        Text(
+                          'Custom Mode',
                           style: TextStyle(
-                            color: selected ? Colors.white : Colors.black87,
-                            fontWeight: FontWeight.w500,
                             fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey.shade800,
                           ),
                         ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: SegmentedButton<bool>(
+                            segments: const [
+                              ButtonSegment(value: true, label: Text('Custom')),
+                              ButtonSegment(value: false, label: Text('Simple')),
+                            ],
+                            selected: {_customMode},
+                            onSelectionChanged: (s) => setState(() => _customMode = s.first),
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.resolveWith((states) {
+                                if (states.contains(WidgetState.selected)) {
+                                  return _themeGradientStart;
+                                }
+                                return Colors.grey.shade200;
+                              }),
+                              foregroundColor: WidgetStateProperty.resolveWith((states) {
+                                if (states.contains(WidgetState.selected)) {
+                                  return Colors.white;
+                                }
+                                return Colors.black87;
+                              }),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    if (isCustom) ...[
+                      Row(
+                        children: [
+                          Text(
+                            'Instrumental (no lyrics)',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade800,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Switch(
+                            value: _instrumental,
+                            onChanged: (v) => setState(() => _instrumental = v),
+                          ),
+                        ],
                       ),
-                    );
-                  }),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Prompt / Lyrics${_instrumental ? " (optional)" : " (required, max $promptMax chars)"}',
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Title (required, max $_titleMaxLength chars)',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade800,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: _fillRandomTitle,
+                            style: TextButton.styleFrom(
+                              foregroundColor: _themeGradientStart,
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: const Text('Random'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _titleController,
+                        maxLength: _titleMaxLength,
+                        maxLines: 1,
+                        style: const TextStyle(color: Colors.black87),
+                        decoration: InputDecoration(
+                          hintText: 'e.g. Peaceful Piano Meditation',
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.surface,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                          counterText: '',
+                          suffixText: '${_titleController.text.length}/$_titleMaxLength',
+                          suffixStyle: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Style (required, max $styleMax chars)',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white.withValues(alpha: 0.95),
+                          color: Colors.grey.shade800,
                         ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: _fillRandomPrompt,
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _styleController,
+                        maxLength: styleMax > 0 ? styleMax : null,
+                        maxLines: 2,
+                        style: const TextStyle(color: Colors.black87),
+                        decoration: InputDecoration(
+                          hintText: 'e.g. Classical, Pop, Jazz',
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.surface,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                          counterText: '',
+                          suffixText: styleMax > 0 ? '${_styleController.text.length}/$styleMax' : null,
+                          suffixStyle: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                        ),
                       ),
-                      child: const Text('Random'),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: List.generate(_styleOptions.length, (i) {
+                          final selected = _selectedStyleIndices.contains(i);
+                          return GestureDetector(
+                            onTap: () => _toggleStyleIndex(i),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              decoration: BoxDecoration(
+                                gradient: selected
+                                    ? const LinearGradient(
+                                        colors: [_themeGradientStart, _themeGradientEnd],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      )
+                                    : null,
+                                color: selected ? null : Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(20),
+                                border: selected ? null : Border.all(color: Colors.grey.shade300),
+                              ),
+                              child: Text(
+                                _styleOptions[i],
+                                style: TextStyle(
+                                  color: selected ? Colors.white : Colors.black87,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Prompt / Lyrics${_instrumental ? " (optional)" : " (required, max $promptMax chars)"}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: _fillRandomPrompt,
+                            style: TextButton.styleFrom(
+                              foregroundColor: _themeGradientStart,
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: const Text('Random'),
+                          ),
+                        ],
+                      ),
+                    ] else ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Prompt (required, max $promptMax chars). Other params are ignored.',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: _fillRandomPrompt,
+                            style: TextButton.styleFrom(
+                              foregroundColor: _themeGradientStart,
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: const Text('Random'),
+                          ),
+                        ],
+                      ),
+                    ],
+
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _promptController,
+                      maxLength: promptMax,
+                      maxLines: 5,
+                      style: const TextStyle(color: Colors.black87),
+                      decoration: InputDecoration(
+                        hintText: isCustom
+                            ? (_instrumental ? 'Optional style description' : 'Enter lyrics or prompt (required)')
+                            : 'e.g. A short relaxing piano tune (max 500 chars)',
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surface,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                        counterText: '',
+                        suffixText: '${_promptController.text.length}/$promptMax',
+                        suffixStyle: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                      ),
                     ),
-                  ],
-                ),
-              ] else ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Prompt (required, max $promptMax chars). Other params are ignored.',
+
+                    if (isCustom) ...[
+                      const SizedBox(height: 16),
+                      Text(
+                        'Vocal (only in Custom Mode)',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white.withValues(alpha: 0.95),
+                          color: Colors.grey.shade800,
                         ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: _fillRandomPrompt,
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: List.generate(_vocalOptions.length, (i) {
+                          final selected = _vocalIndex == i;
+                          return FilterChip(
+                            label: Text(_vocalOptions[i], style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w500)),
+                            selected: selected,
+                            onSelected: (_) => setState(() => _vocalIndex = i),
+                            backgroundColor: Colors.grey.shade100,
+                            selectedColor: _themeGradientStart.withValues(alpha: 0.2),
+                            checkmarkColor: Colors.black87,
+                          );
+                        }),
                       ),
-                      child: const Text('Random'),
+                    ],
+
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: _isSubmitting ? null : _createMusic,
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: const StadiumBorder(),
+                        ),
+                        child: Text(_isSubmitting ? 'Creating...' : 'Create Music'),
+                      ),
                     ),
                   ],
-                ),
-              ],
-
-              const SizedBox(height: 8),
-              TextField(
-                controller: _promptController,
-                maxLength: promptMax,
-                maxLines: 5,
-                style: const TextStyle(color: Colors.black87),
-                decoration: InputDecoration(
-                  hintText: isCustom
-                      ? (_instrumental ? 'Optional style description' : 'Enter lyrics or prompt (required)')
-                      : 'e.g. A short relaxing piano tune (max 500 chars)',
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.surface,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-                  counterText: '',
-                  suffixText: '${_promptController.text.length}/$promptMax',
-                  suffixStyle: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                ),
-              ),
-
-              if (isCustom) ...[
-                const SizedBox(height: 16),
-                Text(
-                  'Vocal (only in Custom Mode)',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white.withValues(alpha: 0.95),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: List.generate(_vocalOptions.length, (i) {
-                    final selected = _vocalIndex == i;
-                    return FilterChip(
-                      label: Text(_vocalOptions[i], style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w500)),
-                      selected: selected,
-                      onSelected: (_) => setState(() => _vocalIndex = i),
-                      backgroundColor: Colors.white.withValues(alpha: 0.85),
-                      selectedColor: Colors.white.withValues(alpha: 0.95),
-                      checkmarkColor: Colors.black87,
-                    );
-                  }),
-                ),
-              ],
-
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: _isSubmitting ? null : _createMusic,
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: const StadiumBorder(),
-                  ),
-                  child: Text(_isSubmitting ? 'Creating...' : 'Create Music'),
                 ),
               ),
               const SizedBox(height: 40),

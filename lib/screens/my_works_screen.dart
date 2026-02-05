@@ -341,20 +341,21 @@ class _MyWorksScreenState extends State<MyWorksScreen> {
             ),
             Expanded(
               child: _displayList.isEmpty
-                  ? Center(
+                  ? SingleChildScrollView(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.paddingOf(context).top + 58 + 12,
+                        left: 20,
+                        right: 20,
+                      ),
                       child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 32),
+                        width: MediaQuery.sizeOf(context).width - 40,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 32,
                           vertical: 48,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.15),
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.3),
-                            width: 1,
-                          ),
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -364,7 +365,7 @@ class _MyWorksScreenState extends State<MyWorksScreen> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.white.withValues(alpha: 0.9),
+                                color: Colors.grey.shade800,
                               ),
                             ),
                             const SizedBox(height: 28),
