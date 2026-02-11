@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../constants/app_ui.dart';
+
 const String _userAgreementUrl =
     'https://www.privacypolicies.com/live/277a2365-4b6a-46a5-94be-4b54f7b75c2c';
 
@@ -49,9 +51,10 @@ class _UserAgreementPageState extends State<UserAgreementPage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/bg_home_nor.webp',
-            fit: BoxFit.cover,
+          Container(
+            decoration: const BoxDecoration(
+              gradient: kHomeBackgroundGradient,
+            ),
           ),
           Positioned(
             left: 0,

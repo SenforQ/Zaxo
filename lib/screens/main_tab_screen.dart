@@ -6,21 +6,27 @@ import 'my_works_screen.dart';
 import 'profile_screen.dart';
 import 'text_to_music_screen.dart';
 
-const double _tabBarHorizontalMargin = 20;
-const double _tabIconSize = 58;
-
-const List<String> _tabNormalAssets = [
-  'assets/icon_home_pre.webp',
-  'assets/icon_dynamic_pre.webp',
-  'assets/icon_work_pre.webp',
-  'assets/icon_me_pre.webp',
-];
-
-const List<String> _tabActiveAssets = [
-  'assets/icon_home_nor.webp',
-  'assets/icon_dynamic_nor.webp',
-  'assets/icon_work_nor.webp',
-  'assets/icon_me_nor.webp',
+const List<BottomNavigationBarItem> _tabItems = [
+  BottomNavigationBarItem(
+    icon: Icon(Icons.home_outlined),
+    activeIcon: Icon(Icons.home),
+    label: 'Home',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.image_outlined),
+    activeIcon: Icon(Icons.image),
+    label: 'AI',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.folder_outlined),
+    activeIcon: Icon(Icons.folder),
+    label: 'Works',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.person_outlined),
+    activeIcon: Icon(Icons.person),
+    label: 'Me',
+  ),
 ];
 
 class _TabNavigatorObserver extends NavigatorObserver {
@@ -97,82 +103,47 @@ class _MainTabScreenState extends State<MainTabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final bottomPadding = MediaQuery.paddingOf(context).bottom;
-    final tabBarWidth = size.width - _tabBarHorizontalMargin * 2;
-    final tabBarBottom = bottomPadding + kTabBarBottomGap;
     final showTabBar = _stackDepths[_currentIndex] <= 1;
 
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/bg_home_nor.webp',
-            fit: BoxFit.cover,
+          Container(
+            decoration: const BoxDecoration(
+              gradient: kHomeBackgroundGradient,
+            ),
           ),
           IndexedStack(
             index: _currentIndex,
             children: _screens,
           ),
-          if (showTabBar)
-            Positioned(
-              left: _tabBarHorizontalMargin,
-              right: _tabBarHorizontalMargin,
-              bottom: tabBarBottom,
-              child: SizedBox(
-                width: tabBarWidth,
-                height: kTabBarHeight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: List.generate(4, (index) {
-                    return _TabItem(
-                      normalAsset: _tabNormalAssets[index],
-                      activeAsset: _tabActiveAssets[index],
-                      isSelected: _currentIndex == index,
-                      onTap: () {
-                        setState(() => _currentIndex = index);
-                        _selectedTabNotifier.value = index;
-                      },
-                    );
-                  }),
-                ),
-              ),
-            ),
         ],
       ),
-    );
-  }
-}
-
-class _TabItem extends StatelessWidget {
-  const _TabItem({
-    required this.normalAsset,
-    required this.activeAsset,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final String normalAsset;
-  final String activeAsset;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: _tabIconSize,
-        height: _tabIconSize,
-        child: Image.asset(
-          isSelected ? activeAsset : normalAsset,
-          width: _tabIconSize,
-          height: _tabIconSize,
-          fit: BoxFit.contain,
-        ),
-      ),
+      bottomNavigationBar: showTabBar
+          ? Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.65),
+                border: Border(
+                  top: BorderSide(color: Colors.white.withValues(alpha: 0.12), width: 1),
+                ),
+              ),
+              child: BottomNavigationBar(
+                currentIndex: _currentIndex,
+                onTap: (index) {
+                  setState(() => _currentIndex = index);
+                  _selectedTabNotifier.value = index;
+                },
+                items: _tabItems,
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                selectedItemColor: Colors.white,
+                unselectedItemColor: Colors.white.withValues(alpha: 0.75),
+                selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+            )
+          : null,
     );
   }
 }

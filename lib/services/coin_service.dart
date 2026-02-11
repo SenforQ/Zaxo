@@ -6,10 +6,12 @@ class CoinService {
   static final CoinService _instance = CoinService._();
   static CoinService get instance => _instance;
 
+  static const int initialCoins = 20;
+
   static Future<void> initializeNewUser() async {
     final coins = await PrefsService.shared.getUserCoins();
     if (coins == 0) {
-      await PrefsService.shared.setUserCoins(0);
+      await PrefsService.shared.setUserCoins(initialCoins);
     }
   }
 

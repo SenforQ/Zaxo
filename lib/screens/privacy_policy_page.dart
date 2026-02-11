@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../constants/app_ui.dart';
+
 const String _privacyPolicyUrl =
     'https://www.privacypolicies.com/live/7f4b4d8f-8cfd-4182-a19d-ec8d791841b1';
 
@@ -49,9 +51,10 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/bg_home_nor.webp',
-            fit: BoxFit.cover,
+          Container(
+            decoration: const BoxDecoration(
+              gradient: kHomeBackgroundGradient,
+            ),
           ),
           Positioned(
             left: 0,

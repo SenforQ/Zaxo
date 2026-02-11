@@ -12,6 +12,7 @@ import '../models/suno_music_item.dart';
 import '../services/prefs_service.dart';
 import '../widgets/gradient_bubbles_background.dart';
 import 'ai_chat_screen.dart';
+import 'ai_image_screen.dart';
 import 'image_detail_screen.dart';
 import 'music_play_detail_screen.dart';
 import 'text_to_music_screen.dart';
@@ -283,85 +284,44 @@ class _MyWorksScreenState extends State<MyWorksScreen> {
         body: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const AiChatScreen(),
-                    ),
-                  );
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+              child: _SegmentedTabBar(
+                labels: const ['All', 'Images', 'Music'],
+                selectedIndex: _filterIndex,
+                onSelected: (index) {
+                  setState(() {
+                    _filterIndex = index;
+                    _applyFilter();
+                  });
                 },
-                borderRadius: BorderRadius.circular(12),
-                child: SizedBox(
-                  width: MediaQuery.sizeOf(context).width - 40,
-                  child: Image.asset(
-                    'assets/img_home_music.webp',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _FilterSegment(
-                      label: 'All',
-                      isSelected: _filterIndex == 0,
-                      onTap: () => setState(() {
-                        _filterIndex = 0;
-                        _applyFilter();
-                      }),
-                    ),
-                  ),
-                  Expanded(
-                    child: _FilterSegment(
-                      label: 'Images',
-                      isSelected: _filterIndex == 1,
-                      onTap: () => setState(() {
-                        _filterIndex = 1;
-                        _applyFilter();
-                      }),
-                    ),
-                  ),
-                  Expanded(
-                    child: _FilterSegment(
-                      label: 'Music',
-                      isSelected: _filterIndex == 2,
-                      onTap: () => setState(() {
-                        _filterIndex = 2;
-                        _applyFilter();
-                      }),
-                    ),
-                  ),
-                ],
               ),
             ),
             Expanded(
-              child: _displayList.isEmpty
-                  ? SingleChildScrollView(
-                      padding: EdgeInsets.only(
-                        top: MediaQuery.paddingOf(context).top + 58 + 12,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: Container(
-                        width: MediaQuery.sizeOf(context).width - 40,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 32,
-                          vertical: 48,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                child: Container(
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: SizedBox.expand(
+                    child: _displayList.isEmpty
+                    ? SingleChildScrollView(
+                        padding: const EdgeInsets.only(top: 48, left: 24, right: 24, bottom: 48),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'No works yet.\nStart creating!',
+                              _filterIndex == 0
+                                  ? 'No works yet.\nStart creating!'
+                                  : _filterIndex == 1
+                                      ? 'No images yet.\nStart creating!'
+                                      : 'No music yet.\nStart creating!',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 16,
@@ -371,8 +331,12 @@ class _MyWorksScreenState extends State<MyWorksScreen> {
                             const SizedBox(height: 28),
                             FilledButton(
                               onPressed: () {
-                                if (widget.onSwitchToTab != null) {
-                                  widget.onSwitchToTab!(0);
+                                if (_filterIndex == 1) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => const AiImageScreen(),
+                                    ),
+                                  );
                                 } else {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
@@ -391,19 +355,20 @@ class _MyWorksScreenState extends State<MyWorksScreen> {
                                   borderRadius: BorderRadius.circular(24),
                                 ),
                               ),
-                              child: const Text('Create Music'),
+                              child: Text(
+                                _filterIndex == 1 ? 'Create Image' : 'Create Music',
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    )
-                  : GridView.builder(
-                      padding: EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        top: 10,
-                        bottom: floatingTabBarBottomInset(context),
-                      ),
+                      )
+                    : GridView.builder(
+                        padding: EdgeInsets.only(
+                          left: 12,
+                          right: 12,
+                          top: 16,
+                          bottom: floatingTabBarBottomInset(context),
+                        ),
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         mainAxisSpacing: 10,
@@ -514,9 +479,79 @@ class _MyWorksScreenState extends State<MyWorksScreen> {
                         );
                       },
                     ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _SegmentedTabBar extends StatelessWidget {
+  const _SegmentedTabBar({
+    required this.labels,
+    required this.selectedIndex,
+    required this.onSelected,
+  });
+
+  final List<String> labels;
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 44,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1),
+      ),
+      padding: const EdgeInsets.all(3),
+      child: Row(
+        children: List.generate(labels.length, (index) {
+          final isSelected = index == selectedIndex;
+          final isFirst = index == 0;
+          final isLast = index == labels.length - 1;
+          return Expanded(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => onSelected(index),
+                borderRadius: BorderRadius.horizontal(
+                  left: isFirst ? const Radius.circular(18) : Radius.zero,
+                  right: isLast ? const Radius.circular(18) : Radius.zero,
+                ),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? Colors.white
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.horizontal(
+                      left: isFirst ? const Radius.circular(18) : Radius.zero,
+                      right: isLast ? const Radius.circular(18) : Radius.zero,
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    labels[index],
+                    style: TextStyle(
+                      color: isSelected
+                          ? const Color(0xFF260FA9)
+                          : Colors.white.withValues(alpha: 0.9),
+                      fontSize: 14,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -637,74 +672,3 @@ class _WorkImage extends StatelessWidget {
   }
 }
 
-class _FilterSegment extends StatelessWidget {
-  const _FilterSegment({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  static const Color _gradientStart = Color(0xFFA2FEF6);
-  static const Color _gradientEnd = Color(0xFF2DE5FF);
-  static const Color _textColor = Color(0xFF334155);
-
-  @override
-  Widget build(BuildContext context) {
-    final borderRadius = BorderRadius.horizontal(
-      left: const Radius.circular(20),
-      right: const Radius.circular(6),
-    );
-    final shape = RoundedRectangleBorder(
-      borderRadius: borderRadius,
-      side: const BorderSide(color: Colors.black, width: 1),
-    );
-
-    final gradient = LinearGradient(
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
-      colors: isSelected
-          ? [_gradientStart, _gradientEnd]
-          : [
-              _gradientStart.withValues(alpha: 0.5),
-              _gradientEnd.withValues(alpha: 0.5),
-            ],
-    );
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 2),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          customBorder: shape,
-          child: Container(
-            height: 40,
-            decoration: ShapeDecoration(
-              gradient: gradient,
-              shape: RoundedRectangleBorder(
-                borderRadius: borderRadius,
-                side: const BorderSide(color: Colors.black, width: 1),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: isSelected
-                      ? _textColor
-                      : _textColor.withValues(alpha: 0.7),
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

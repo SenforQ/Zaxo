@@ -596,25 +596,37 @@ class _AiImageScreenState extends State<AiImageScreen> with TickerProviderStateM
     showModalBottomSheet(
       context: context,
       builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text('Image Ratio', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
-            ...List.generate(_ratioOptions.length, (i) {
-              final selected = _selectedRatioIndex == i;
-              return ListTile(
-                title: Text(_ratioOptions[i]),
-                trailing: selected ? const Icon(Icons.check, color: Color(0xFFFEE838)) : null,
-                onTap: () {
-                  setState(() => _selectedRatioIndex = i);
-                  Navigator.pop(context);
-                },
-              );
-            }),
-          ],
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.sizeOf(context).height * 0.6,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text('Image Ratio', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(_ratioOptions.length, (i) {
+                      final selected = _selectedRatioIndex == i;
+                      return ListTile(
+                        title: Text(_ratioOptions[i]),
+                        trailing: selected ? const Icon(Icons.check, color: Color(0xFFFEE838)) : null,
+                        onTap: () {
+                          setState(() => _selectedRatioIndex = i);
+                          Navigator.pop(context);
+                        },
+                      );
+                    }),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

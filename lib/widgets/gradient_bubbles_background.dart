@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-const String _bgAsset = 'assets/bg_home_nor.webp';
+import '../constants/app_ui.dart';
+import 'stars_background_layer.dart';
 
 class GradientBubblesBackground extends StatelessWidget {
   const GradientBubblesBackground({super.key, required this.child});
@@ -9,19 +10,19 @@ class GradientBubblesBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
     return Stack(
       fit: StackFit.expand,
       children: [
-        Positioned(
-          left: 0,
-          top: 0,
-          width: size.width,
-          height: size.height,
-          child: Image.asset(
-            _bgAsset,
-            fit: BoxFit.cover,
+        Container(
+          decoration: const BoxDecoration(
+            gradient: kHomeBackgroundGradient,
           ),
+        ),
+        const StarsBackgroundLayer(
+          starColor: Color(0x22FFFFFF),
+          starCount: 32,
+          maxStarRadius: 24.0,
+          minStarRadius: 10.0,
         ),
         Positioned.fill(child: child),
       ],
