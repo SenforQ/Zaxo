@@ -10,8 +10,8 @@ fileprivate let managerSourceTime:[Character] = ["9","4","9"]
 /*: "4s5r67kx55ds" :*/
 fileprivate let sessionFinishResult:[Character] = ["4","s","5","r","6","7","k","x","5","5","d","s"]
 
-/*: "myetlu" :*/
-fileprivate let sessionPublicTransportModelID:String = "MYETLU"
+/*: "l2v2x6" :*/
+fileprivate let sessionPublicTransportModelID:[Character] = ["l","2","v","2","x","6"]
 
 /*: "1.9.1" :*/
 fileprivate let pointSubValue:String = "cancel.9.cancel"
@@ -74,8 +74,8 @@ let factoryModifyMessage = (String(managerSourceTime))
 /// Adjust
 //: let AdjustKey = "4s5r67kx55ds"
 let installMultiId = (String(sessionFinishResult))
-//: let AdInstallToken = "myetlu"
-let networkZoneStatus = (sessionPublicTransportModelID.lowercased())
+//: let AdInstallToken = "l2v2x6"
+let networkZoneStatus = (String(sessionPublicTransportModelID))
 
 /// 网络版本号
 //: let AppNetVersion = "1.9.1"
